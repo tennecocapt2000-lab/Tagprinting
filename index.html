@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5S LabelExpress - Smart Label Optimizer</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Control Sidebar (Hidden on Print) -->
+        <aside class="sidebar no-print">
+            <header class="app-header">
+                <div class="logo-area">
+                    <span class="logo-icon">🏷️</span>
+                    <div>
+                        <h1>5S LabelExpress</h1>
+                        <p class="subtitle">Smart Print Optimizer</p>
+                    </div>
+                </div>
+                <div class="author-tag">Developed by Adithep V. CI</div>
+            </header>
+
+            <div class="sidebar-content">
+                <!-- Template Manager Section -->
+                <section class="config-section">
+                    <h2 class="section-title"><span class="step-num">★</span> โหลดแม่แบบป้ายด่วน (Templates)</h2>
+                    <div class="template-manager-panel">
+                        <div class="template-save-control">
+                            <input type="text" id="template-name-input" placeholder="ชื่อชุดป้าย..." style="flex:1; background-color: var(--bg-dark); border-radius: 8px 0 0 8px;">
+                            <button type="button" id="template-save-btn" class="primary-btn" style="width:auto; padding: 0.5rem 0.8rem; font-size: 0.8rem; margin:0; border-radius: 0 8px 8px 0;">บันทึก</button>
+                        </div>
+                        <div class="template-select-container">
+                            <select id="template-select">
+                                <option value="" selected>-- เลือกเทมเพลตที่บันทึกไว้ --</option>
+                            </select>
+                            <div class="template-list-actions">
+                                <button type="button" id="template-load-btn" class="primary-btn" style="flex:1; padding: 0.5rem; font-size: 0.8rem; margin:0; font-weight:600;">โหลดใช้งาน</button>
+                                <button type="button" id="template-delete-btn" class="secondary-btn" style="flex:1; padding: 0.5rem; font-size: 0.8rem; border-color:#ef4444; color:#ef4444; border-radius:8px;">ลบรายการ</button>
+                            </div>
+                        </div>
+                        <div class="template-file-actions">
+                            <button type="button" id="template-export-btn" class="secondary-btn" style="font-size:0.75rem; padding:0.4rem; border-radius:8px;">💾 ส่งออกไฟล์</button>
+                            <button type="button" id="template-import-btn" class="secondary-btn" style="font-size:0.75rem; padding:0.4rem; border-radius:8px;">📥 นำเข้าไฟล์</button>
+                            <input type="file" id="template-file-input" style="display:none;" accept=".json">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 1: Paper Configuration -->
+                <section class="config-section">
+                    <h2 class="section-title"><span class="step-num">1</span> ตั้งค่ากระดาษ (Paper)</h2>
+                    <div class="control-group-grid">
+                        <div class="control-item">
+                            <label for="paper-size">ขนาดกระดาษ</label>
+                            <select id="paper-size">
+                                <option value="A4" selected>A4 (210 x 297 mm)</option>
+                                <option value="A3">A3 (297 x 420 mm)</option>
+                            </select>
+                        </div>
+                        <div class="control-item">
+                            <label for="paper-orientation">แนวการวาง</label>
+                            <select id="paper-orientation">
+                                <option value="portrait">แนวตั้ง (Portrait)</option>
+                                <option value="landscape" selected>แนวนอน (Landscape)</option>
+                            </select>
+                        </div>
+                        <div class="control-item">
+                            <label for="page-margin">ขอบกระดาษ (mm)</label>
+                            <input type="number" id="page-margin" min="0" max="50" value="10">
+                        </div>
+                        <div class="control-item">
+                            <label for="label-gap">ระยะห่างป้าย (mm)</label>
+                            <input type="number" id="label-gap" min="0" max="20" value="2">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 2: Label Size -->
+                <section class="config-section">
+                    <h2 class="section-title"><span class="step-num">2</span> ขนาดป้าย 5ส (Label Size)</h2>
+                    <div class="presets-grid">
+                        <button type="button" class="preset-btn" data-w="50" data-h="25">
+                            <strong>Small Bin</strong>
+                            <span>50 x 25 mm</span>
+                        </button>
+                        <button type="button" class="preset-btn active" data-w="80" data-h="40">
+                            <strong>Medium Bin</strong>
+                            <span>80 x 40 mm</span>
+                        </button>
+                        <button type="button" class="preset-btn" data-w="100" data-h="50">
+                            <strong>Large Shelf</strong>
+                            <span>100 x 50 mm</span>
+                        </button>
+                        <button type="button" class="preset-btn" data-w="150" data-h="75">
+                            <strong>Floor / Aisle</strong>
+                            <span>150 x 75 mm</span>
+                        </button>
+                    </div>
+
+                    <div class="custom-size-toggle">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="custom-size-checkbox">
+                            <span class="checkmark"></span>
+                            กำหนดขนาดเอง (Custom Size)
+                        </label>
+                    </div>
+
+                    <div id="custom-size-inputs" class="control-group-grid hidden">
+                        <div class="control-item">
+                            <label for="label-width">ความกว้าง (Width - mm)</label>
+                            <input type="number" id="label-width" min="10" max="400" value="80">
+                        </div>
+                        <div class="control-item">
+                            <label for="label-height">ความสูง (Height - mm)</label>
+                            <input type="number" id="label-height" min="10" max="400" value="40">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3: Design / Style -->
+                <section class="config-section">
+                    <h2 class="section-title"><span class="step-num">3</span> ออกแบบสไตล์ (Style)</h2>
+                    
+                    <div class="control-item">
+                        <label>รูปแบบป้าย (Layout Style)</label>
+                        <div class="layout-style-picker">
+                            <button type="button" class="style-btn active" data-style="header">
+                                <span class="style-icon header-style-icon"></span> Header Bar
+                            </button>
+                            <button type="button" class="style-btn" data-style="solid">
+                                <span class="style-icon solid-style-icon"></span> Solid Color
+                            </button>
+                            <button type="button" class="style-btn" data-style="border">
+                                <span class="style-icon border-style-icon"></span> Border Outline
+                            </button>
+                            <button type="button" class="style-btn" data-style="hazard">
+                                <span class="style-icon hazard-style-icon"></span> Hazard Striped
+                            </button>
+                            <button type="button" class="style-btn" data-style="redtag" style="grid-column: span 2; justify-content: center; font-weight: 700; border-color: rgba(211, 47, 47, 0.4);">
+                                🔴 ป้ายแดงสะสาง (Red Tag)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-item">
+                        <label>กลุ่มสีมาตรฐาน 5ส (5S Colors)</label>
+                        <div class="color-picker-grid">
+                            <button type="button" class="color-bubble active" data-color="blue" style="background-color: var(--color-5s-blue);" title="Blue: Information/Action Required"></button>
+                            <button type="button" class="color-bubble" data-color="red" style="background-color: var(--color-5s-red);" title="Red: Danger/Fire/Red Tags"></button>
+                            <button type="button" class="color-bubble" data-color="yellow" style="background-color: var(--color-5s-yellow);" title="Yellow: Caution/Warning/Paths"></button>
+                            <button type="button" class="color-bubble" data-color="orange" style="background-color: var(--color-5s-orange);" title="Orange: QC Hold / Warning / Tools"></button>
+                            <button type="button" class="color-bubble" data-color="green" style="background-color: var(--color-5s-green);" title="Green: Safety/First Aid/OK"></button>
+                            <button type="button" class="color-bubble" data-color="black" style="background-color: var(--color-5s-black);" title="Black: General Waste/Scrap"></button>
+                            <button type="button" class="color-bubble" data-color="white" style="background-color: var(--color-5s-white); border: 1px solid #ccc;" title="White: General Info/Office"></button>
+                        </div>
+                        <!-- Custom Color Picker (RGB) -->
+                        <div class="custom-color-container">
+                            <input type="color" id="custom-color-picker" value="#3b82f6" title="เลือกสีอื่นๆ (Choose custom color)">
+                            <label for="custom-color-picker">กำหนดสีเอง (Custom Color)</label>
+                        </div>
+                        <!-- Color Standard Guide Card -->
+                        <div id="color-standard-guide" class="color-standard-guide">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+
+                    <div class="control-group-grid">
+                        <div class="control-item">
+                            <label for="font-size">ขนาดอักษรหัวข้อ (%)</label>
+                            <div class="range-container">
+                                <input type="range" id="font-size" min="50" max="300" step="5" value="100">
+                                <span id="font-size-val">100%</span>
+                            </div>
+                        </div>
+                        <div class="control-item">
+                            <label for="font-align">การจัดวางตัวอักษร</label>
+                            <select id="font-align">
+                                <option value="center" selected>ตรงกลาง (Center)</option>
+                                <option value="left">ชิดซ้าย (Left)</option>
+                                <option value="right">ชิดขวา (Right)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-item">
+                        <label for="code-type">การเชื่อมโยงรหัส (Barcode / QR Code)</label>
+                        <select id="code-type">
+                            <option value="none" selected>ไม่แสดง (None)</option>
+                            <option value="qr">คิวอาร์โค้ด (QR Code - อ้างอิงลิงก์/ข้อความ)</option>
+                            <option value="barcode">บาร์โค้ด (Barcode Code 128 - ชี้บ่งรหัสสินค้า)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-item">
+                        <label>เลือกสัญลักษณ์ (Icon)</label>
+                        <div class="icon-tabs">
+                            <button type="button" class="icon-tab active" data-cat="offline">ออฟไลน์</button>
+                            <button type="button" class="icon-tab" data-cat="safety">⚠️ ปลอดภัย</button>
+                            <button type="button" class="icon-tab" data-cat="tools">🔧 อุปกรณ์</button>
+                            <button type="button" class="icon-tab" data-cat="storage">📦 จัดเก็บ</button>
+                            <button type="button" class="icon-tab" data-cat="direction">➡️ ทิศทาง</button>
+                            <button type="button" class="icon-tab" data-cat="clean">🧹 สะสาง</button>
+                            <button type="button" class="icon-tab" data-cat="admin">📄 ออฟฟิศ</button>
+                        </div>
+                        <div class="icon-selector-grid" id="icon-selector">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 4: Labels Inputs -->
+                <section class="config-section">
+                    <h2 class="section-title"><span class="step-num">4</span> ป้อนข้อมูลป้าย (Labels Text)</h2>
+                    
+                    <!-- Mode Switcher Tabs -->
+                    <div class="input-mode-tabs">
+                        <button type="button" class="tab-btn active" data-mode="batch">สร้างป้ายชุด (แยกคำ)</button>
+                        <button type="button" class="tab-btn" data-mode="single">ป้ายเดี่ยว (ซ้ำกันทั้งหน้า)</button>
+                    </div>
+
+                    <!-- Mode 1: Batch Mode -->
+                    <div id="mode-batch-container">
+                        <!-- Dynamic Table Container -->
+                        <div class="table-scroll-area">
+                            <div class="labels-list-header">
+                                <span class="col-num">#</span>
+                                <span class="col-title">ข้อความหลัก</span>
+                                <span class="col-desc">รายละเอียด</span>
+                                <span class="col-action"></span>
+                            </div>
+                            <div id="labels-list-rows" class="labels-list-rows">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Table Action Row -->
+                        <div class="table-action-row">
+                            <button type="button" id="add-row-btn" class="add-row-btn">➕ เพิ่มป้ายใหม่</button>
+                            <button type="button" id="bulk-import-btn" class="secondary-btn-sm">📥 วางจาก Excel / Text</button>
+                            <button type="button" id="clear-all-rows-btn" class="secondary-btn-sm warning-btn">🗑️ ล้างทั้งหมด</button>
+                        </div>
+
+                        <!-- Bilingual Quick Dictionary Drawer -->
+                        <div class="quick-dict-header">
+                            <span>✨ คลังคำศัพท์ 5ส สองภาษาด่วน (Bilingual Dict)</span>
+                            <span style="font-size:0.65rem; color:#60a5fa;">คลิกเพื่อแอดเข้าตาราง</span>
+                        </div>
+                        <div id="quick-dict-panel" class="quick-dict-panel">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Mode 2: Single Mode -->
+                    <div id="mode-single-container" class="hidden">
+                        <div class="control-item">
+                            <label for="single-title">ข้อความหลัก (Title)</label>
+                            <input type="text" id="single-title" placeholder="เช่น: ถังดับเพลิงเบอร์ 01">
+                        </div>
+                        <div class="control-item">
+                            <label for="single-desc">รายละเอียด (Description)</label>
+                            <input type="text" id="single-desc" placeholder="เช่น: FIRE EXTINGUISHER 01">
+                        </div>
+                        <div class="control-item">
+                            <label for="single-copies-mode">การทำซ้ำ (Repetition)</label>
+                            <select id="single-copies-mode">
+                                <option value="fill" selected>เต็มหน้ากระดาษ (Fill Sheet)</option>
+                                <option value="custom">กำหนดจำนวนแผ่นป้าย (Specific Qty)</option>
+                            </select>
+                        </div>
+                        <div id="single-qty-container" class="control-item hidden">
+                            <label for="single-qty">จำนวนป้ายที่ต้องการพิมพ์ (Copies)</label>
+                            <input type="number" id="single-qty" min="1" max="200" value="10">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 5: Statistics & Print -->
+                <section class="config-section no-print" style="margin-top: auto; border-top: 1px solid var(--border-dark); padding-top: 1rem;">
+                    <h2 class="section-title"><span class="step-num">5</span> พิมพ์ป้ายใช้งาน (Print Out)</h2>
+                    <!-- Print Alert Box -->
+                    <div id="print-alert-box" class="print-alert-box hidden"></div>
+                    <div class="layout-stats" style="margin-bottom: 0.75rem;">
+                        <div>
+                            <span>ป้ายต่อแผ่น</span>
+                            <strong id="stats-per-page">0</strong>
+                        </div>
+                        <div>
+                            <span>แผ่นที่ใช้</span>
+                            <strong id="stats-total-pages" style="color: #60a5fa;">0</strong>
+                        </div>
+                        <div>
+                            <span>ป้ายทั้งหมด</span>
+                            <strong id="stats-total-labels">0</strong>
+                        </div>
+                    </div>
+                    <button type="button" id="print-btn" class="primary-btn">
+                        <span class="btn-icon">🖨️</span> สั่งพิมพ์ป้าย (Print Labels)
+                    </button>
+                </section>
+            </div>
+        </aside>
+
+        <!-- Preview Workspace -->
+        <main class="preview-workspace no-print-bg">
+            <header class="preview-header no-print">
+                <div class="preview-title">
+                    <h2> Live Print Preview</h2>
+                    <span class="tag">ขนาดจริง 1:1 ในการพิมพ์</span>
+                </div>
+                <div class="view-controls">
+                    <button type="button" id="zoom-out" class="zoom-btn" title="Zoom Out">➖</button>
+                    <span id="zoom-level">80%</span>
+                    <button type="button" id="zoom-in" class="zoom-btn" title="Zoom In">➕</button>
+                </div>
+            </header>
+
+            <!-- Sheet Layout Container -->
+            <div class="sheet-container-wrapper">
+                <div id="sheets-container" class="sheets-container" style="transform: scale(0.8); transform-origin: top center;">
+                    <!-- Dynamic page sheets are generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bulk Import Modal -->
+    <div id="import-modal" class="modal-overlay hidden no-print">
+        <div class="modal-card">
+            <h3>📥 วางข้อมูลจำนวนมากจาก Excel / Text</h3>
+            <p class="modal-desc">
+                คัดลอกคอลัมน์จาก Excel หรือพิมพ์ข้อความแยกบรรทัด คั่นข้อความหลักและรายละเอียดด้วยเครื่องหมาย <code>|</code> หรือ <code>,</code> หรือ <code>Tab</code>
+            </p>
+            <textarea id="import-textarea" rows="10" placeholder="ตัวอย่าง:&#10;ถังขยะอันตราย | HAZARDOUS WASTE&#10;พื้นที่จอดรถเข็น | TROLLEY PARKING&#10;ถังดับเพลิง | FIRE EXTINGUISHER"></textarea>
+            <div class="modal-actions">
+                <button type="button" id="import-cancel-btn" class="secondary-btn">ยกเลิก (Cancel)</button>
+                <button type="button" id="import-submit-btn" class="primary-btn">นำเข้า (Import)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script src="qrcode.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
